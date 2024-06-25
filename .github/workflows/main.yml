@@ -28,8 +28,20 @@ jobs:
       - name: Build the application
         run: npm run build
 
-      # - name: Copy images folder to build folder
-      #   run: cp -R public/images dist/
+      - name: Verify build folder exists
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "Build folder does not exist"
+            exit 1
+          fi
+
+      # - name: Copy images folder to build folder if it exists
+      #   run: |
+      #     if [ -d "public/images" ]; then
+      #       cp -R public/images dist/
+      #     else
+      #       echo "public/images does not exist, skipping copy step"
+      #     fi
 
       - name: Build Docker image
         run: docker build -t yuriydovzhyk/apartment-rent:latest .
@@ -62,9 +74,8 @@ jobs:
           tags: ghcr.io/${{ github.repository_owner }}/apartment-rent:latest
 
       - name: Deploy to GitHub Pages
-        # uses: JamesIves/github-pages-deploy-action@4.1.2
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: ./build
+          folder: dist
           token: ${{ secrets.ACCESS_TOKEN }}
