@@ -9,21 +9,19 @@ const NotFoundPage = () => import("./pages/NotFoundPage.vue");
 const MyOrdersPage = () => import("./pages/MyOrdersPage.vue");
 const RegisterApartmentPage = () => import("./pages/RegisterApartmentPage.vue");
 
-const baseUrl = process.env.NODE_ENV === "production" ? "/apartment-rent" : "/";
-
 const routes = [
   {
-    path: baseUrl,
+    path: "/",
     component: HomePage,
     name: "homepage",
   },
   {
-    path: `${baseUrl}/apartments/:_id`,
+    path: "/apartments/:_id",
     component: ApartmentPage,
     name: "apartment",
   },
   {
-    path: `${baseUrl}/login`,
+    path: "/login",
     component: LoginPage,
     name: "login-page",
     meta: {
@@ -31,7 +29,7 @@ const routes = [
     },
   },
   {
-    path: `${baseUrl}/registration`,
+    path: "/registration",
     component: RegistrationPage,
     name: "registration-page",
     meta: {
@@ -39,7 +37,7 @@ const routes = [
     },
   },
   {
-    path: `${baseUrl}/my-orders`,
+    path: "/my-orders",
     component: MyOrdersPage,
     name: "my-orders",
     meta: {
@@ -47,7 +45,7 @@ const routes = [
     },
   },
   {
-    path: `${baseUrl}/register-apartment`,
+    path: "/register-apartment",
     component: RegisterApartmentPage,
     name: "register-apartment",
     meta: {
@@ -55,7 +53,7 @@ const routes = [
     },
   },
   {
-    path: `${baseUrl}/:pathMatch(.*)*`,
+    path: "/:pathMatch(.*)*",
     component: NotFoundPage,
     name: "notfoundpage",
   },
