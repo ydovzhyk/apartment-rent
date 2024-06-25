@@ -1,0 +1,10 @@
+$namespace: "mx"; // change the 'mx' to 'xmx'. then <date-picker prefix-class="xmx" />
+
+$default-color: #555;
+$primary-color: #ff662d;
+
+@import "~vue-datepicker-next/scss/index.scss";
+
+.mx-input {
+  height: 40px;
+}

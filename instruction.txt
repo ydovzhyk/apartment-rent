@@ -1,0 +1,90 @@
+1. Встановлення пакета 
+npm install -g @vue/cli
+2. Перевірити встановлену версію
+vue --version
+3. Оновлення версії
+npm update -g @vue/cli
+4. Запуск проекта
+npm run serve
+5. Використання scss 
+npm install --save-dev sass-loader node-sass
+Налаштовуємо наші стилі в assets:
+/* src/assets/scss */
+використовуємо для стилізації:
+background-color: $background-btn-main-color;
+_________
+Для створення Vue components встановлюємо Vue VSCode Snippets
+за допомогою команди vbase створюємо темплейт компонента
+_________
+В файл index.html підключаємо шрифт
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&display=swap" rel="stylesheet">
+далі в App.vue:
+#app {
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+}
+_________
+<a href="https://facebook.com" @click.prevent.stop="handleLinkClick">facebook</a>
+prevent - забороняє перехід на сторінку
+stop - зупиняє події які назначені були вище
+methods: {
+  handleLinkClick() {
+    console.log("link clicked")
+  }
+}
+_________
+v-model
+<h2>{{ text }}</h2>
+<input type="text" :value="text" @input="event => text = event.target.value">
+<input type="text" v-model="text">
+_________
+Підключаємо Routes
+npm i vue-router
+В main.js робимо імпорт
+import router from "./router";
+createApp(App).use(router).mount("#app");
+
+router.js створюємо router:
+import { createRouter, createWebHistory } from "vue-router";
+
+const HomePage = () => import("./pages/HomePage");
+const routes = [
+  {
+    path: "/",
+    component: HomePage,
+    name: "homepage",
+  },
+];
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes,
+});
+_________
+Для передачі параметрів url використовуємо:
+{
+    path: "/apartments/:id",
+    component: ApartmentPage,
+    name: "apartment",
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  Для отримання парметрів з url:
+  mounted() {
+    console.log(this.$route.params.id)
+    console.log(this.$route.query.name)
+  }
+  _________
+  Робота з асинхроними запросами
+  npm i axios
+- робимо папку utils -> axios.js
+- також папку services де ми описуємо самі запроси:
+
+import axios from '../utils/axios';
+
+export const getApartmentsList = () => {
+  return axios.get('/apartments');
+};
+
+Для використання календаря встановлюємо:
+npm install vue-datepicker-next та npm install moment
