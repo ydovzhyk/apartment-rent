@@ -1,85 +1,3 @@
-# name: Deploy
-
-# on:
-#   push:
-#     branches:
-#       - main
-
-# jobs:
-#   build-and-push:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       packages: write
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Setup Node.js
-#         uses: actions/setup-node@v3.6.0
-#         with:
-#           node-version: "16.x"
-
-#       - name: Install dependencies
-#         run: npm install
-
-#       - name: Update package.json for GitHub Pages
-#         run: |
-#           echo "$(jq '.homepage = "https://ydovzhyk.github.io/apartment-rent"' package.json)" > ./package.json
-#         working-directory: .
-
-#       - name: Build the application
-#         run: npm run build
-
-#       - name: Verify build folder exists
-#         run: |
-#           if [ ! -d "dist" ]; then
-#             echo "Build folder does not exist"
-#             exit 1
-#           fi
-
-#       - name: Copy images folder to build folder if it exists
-#         run: |
-#           if [ -d "public/images" ]; then
-#             cp -R public/images dist/
-#           else
-#             echo "public/images does not exist, skipping copy step"
-#           fi
-
-#       - name: Build Docker image
-#         run: docker build -t yuriydovzhyk/apartment-rent:latest .
-
-#       - name: Login to Docker Hub
-#         uses: docker/login-action@v2
-#         with:
-#           username: ${{ secrets.DOCKERHUB_USERNAME }}
-#           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-#       - name: Push Docker image
-#         uses: docker/build-push-action@v3
-#         with:
-#           context: .
-#           push: true
-#           tags: yuriydovzhyk/apartment-rent:latest
-
-#       - name: Login to GitHub Container Registry
-#         uses: docker/login-action@v2
-#         with:
-#           registry: ghcr.io
-#           username: ${{ github.actor }}
-#           password: ${{ secrets.TOKEN_GITHUB }}
-
-#       - name: Push Docker image to GitHub Container Registry
-#         uses: docker/build-push-action@v3
-#         with:
-#           context: .
-#           push: true
-#           tags: ghcr.io/${{ github.repository_owner }}/apartment-rent:latest
-
-#       - name: Deploy to GitHub Pages
-#         uses: JamesIves/github-pages-deploy-action@v4
-#         with:
-#           branch: gh-pages
-#           folder: ./dist
-#           token: ${{ secrets.ACCESS_TOKEN }}
-
 name: Deploy
 
 on:
@@ -124,6 +42,36 @@ jobs:
           else
             echo "public/images does not exist, skipping copy step"
           fi
+
+      - name: Build Docker image
+        run: docker build -t yuriydovzhyk/apartment-rent:latest .
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: yuriydovzhyk/apartment-rent:latest
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN_GITHUB }}
+
+      - name: Push Docker image to GitHub Container Registry
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/apartment-rent:latest
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
