@@ -14,7 +14,8 @@
                         :initialAdults="this.formData.numberAdults" :initialChildren="this.formData.numberChildren"
                         :initialRooms="this.formData.numberRooms" @update-count="handleUpdateCount" :key="inputKey" />
                 </div>
-            </div>           
+            </div>
+                       
             <div class="booking__btnWrapper">
                 <ButtonVue type="submit" class="btn-dark" label="Перевірити наявність" @click="handleClick">
                 </ButtonVue>
