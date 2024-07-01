@@ -3,13 +3,17 @@ import {
   registerUser,
   logout,
   getCurrentUser,
+  editUser,
 } from "../../services/auth.service";
 
 const initialState = {
   user: {
     username: "",
+    name: "",
+    phone: "",
     email: "",
     userAvatar: "",
+    aboutUser: "",
     id: "",
   },
   accessToken: "",
@@ -58,6 +62,15 @@ export default {
         })
       );
     },
+    setUpdatedUserData(state, userData) {
+      state.user.name = userData.user.name ? userData.user.name : "";
+      state.user.phone = userData.user.phone ? userData.user.phone : "";
+      state.user.aboutUser = userData.user.aboutUser
+        ? userData.user.aboutUser
+        : "";
+      state.user.email = userData.user.email;
+      state.user.userAvatar = userData.user.userAvatar;
+    },
     setisLoggedIn(state, data) {
       state.isLoggedIn = data;
     },
@@ -85,6 +98,10 @@ export default {
       const { data } = await getCurrentUser(payload);
       commit("setLoginUserData", data);
       commit("setisLoggedIn", true);
+    },
+    async editUserData({ commit }, payload) {
+      const { data } = await editUser(payload);
+      commit("setUpdatedUserData", data);
     },
   },
 };

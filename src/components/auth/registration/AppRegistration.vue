@@ -40,7 +40,7 @@
         :rules="confirmPassword"
         class="registration__input"
       />
-      <ButtonVue class="btn-dark" type="submit" label="Зареєструватися" :loading="loading"></ButtonVue>
+      <ButtonVue class="btn-dark" type="submit" label="Зареєструватися"></ButtonVue>
     </form>
   </AuthContainer>
 </template>
@@ -55,7 +55,6 @@ import {
   passwordValidation,
   isRequired,
 } from '../../../utils/validationRules';
-// import { registerUser } from '@/services/auth.service';
 import avatarImage from '../../../assets/img/Avatar/avatar.svg';
 
 export default {

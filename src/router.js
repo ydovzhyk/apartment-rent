@@ -11,6 +11,7 @@ const LoginPage = () => import("./pages/Login.Page.vue");
 const RegistrationPage = () => import("./pages/RegistrationPage.vue");
 const NotFoundPage = () => import("./pages/NotFoundPage.vue");
 const MyOrdersPage = () => import("./pages/MyOrdersPage.vue");
+const MyProfilePage = () => import("./pages/MyProfilePage.vue");
 const RegisterApartmentPage = () => import("./pages/RegisterApartmentPage.vue");
 
 const routes = [
@@ -49,6 +50,14 @@ const routes = [
     },
   },
   {
+    path: "/my-profile",
+    component: MyProfilePage,
+    name: "my-profile",
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/register-apartment",
     component: RegisterApartmentPage,
     name: "register-apartment",
@@ -69,18 +78,26 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isLoggedIn = store.state.auth.isLoggedIn;
+router.beforeEach(async (to, from, next) => {
+  let isLoggedIn = store.state.auth.isLoggedIn;
+
+  const authData = await JSON.parse(
+    localStorage.getItem("apartment-rent-auth")
+  );
+
+  if (authData && authData.accessToken) {
+    isLoggedIn = true;
+  }
 
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!isLoggedIn) {
-      next({ name: "login-page" });
+      return next({ name: "login-page" });
     }
   }
 
   if (to.matched.some((record) => record.meta.hideForAuth)) {
     if (isLoggedIn) {
-      next({ name: "homepage" });
+      return next({ name: "homepage" });
     }
   }
 

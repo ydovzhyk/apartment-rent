@@ -1,78 +1,66 @@
 <template>
   <div class="account-actions" @mouseover="open" @mouseleave="closeHower">
-    <button @click="toggle" class="account-actions__btn">
-      <span class="account-actions__text">Привіт, {{ userName }}</span>
-      <svg
-        class="account-actions__icon"
-        width="16"
-        height="18"
-        viewBox="0 0 16 18"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M8 0C5.38286 0 3.25391 2.12896 3.25391 4.74609C3.25391 7.36323 5.38286 9.49219 8 9.49219C10.6171 9.49219 12.7461 7.36323 12.7461 4.74609C12.7461 2.12896 10.6171 0 8 0Z"
-        />
-        <path
-          d="M15.8216 14.0161C14.4028 11.8877 12.0282 10.6172 9.4708 10.6172H6.5292C3.9718 10.6172 1.5972 11.8877 0.178438 14.0161L0.0898438 14.1489V18H15.9102H15.9102V14.1489L15.8216 14.0161Z"
-        />
-      </svg>
-    </button>
+    <div class="account-actions__info-box">
+      <div class="account-actions__info-options">
+        <router-link class="account-actions__link" :to="{ name: 'my-orders' }">
+          <div class="account-actions__info-options-booking">
+          </div>
+        </router-link>
+        <router-link class="account-actions__link" :to="{ name: 'my-orders' }">
+          <div class="account-actions__info-options-message">
+            <div class="account-actions__info-count">
+              <span class="account-actions__info-count-text">14</span>
+            </div>
+          </div>
+        </router-link>
+      </div>
+      <router-link class="account-actions__link" :to="{ name: 'my-profile' }">
+        <span class="account-actions__info-link-text">Привіт, {{ userName }}</span>
+        <div class="account-actions__icon-wrapper" :style="backgroundImageStyle">
+        </div>
+      </router-link>
+      <img src="@/assets/img/info/vertical-line.png" alt="Vertical-line" class="account-actions__devider-icon">
+      <button @click="handleLogout" class="account-actions__logout">
+        <img src="@/assets/img/info/exit.png" alt="Exit" class="account-actions__info-icon">
+        <span class="account-actions__info-icon-text">Вихід</span>
+      </button>
+    </div>
     <ul v-show="isOpen" class="account-actions__list">
       <li class="account-actions__item">
-        <router-link class="account-actions__link" :to="{ name: 'my-orders' }"
-          >Мої замовлення</router-link
-        >
+        <router-link class="account-actions__link" :to="{ name: 'my-orders' }">Мої замовлення</router-link>
       </li>
       <li class="account-actions__item">
         <button @click="handleLogout" class="account-actions__logout">
-          Вийти
+          <div class="account-actions__info">
+            <img src="@/assets/img/info/exit.png" alt="Exit-regular" class="account-actions__info-icon">
+          </div>
         </button>
       </li>
     </ul>
   </div>
-  <CircleLoader v-if="loading" width="90" height="90" color="#ff662d" />
 </template>
 
 <script>
-import CircleLoader from '../shared/loaders/CircleLoader.vue'
 export default {
   name: 'AccountActions',
-  components: {
-    CircleLoader,
-  },
   data() {
     return {
       isOpen: false,
-      loading: false,
     };
   },
   methods: {
-    open() {
-      this.isOpen = true;
-    },
-    close() {
-      this.isOpen = false;
-    },
-    closeHower() {
-      setTimeout(() => {
-        this.isOpen = false;
-      }, 10000);
-    },
-    toggle() {
-      this.isOpen = !this.isOpen;
-    },
     async handleLogout() {
       try {
-        this.loading = true;
+        this.$store.dispatch('technicial/startLoading');
         await this.$store.dispatch('auth/logout');
-        this.loading = false;
         this.$router.push({ name: 'homepage' });
       } catch (error) {
-        this.loading = false;
         this.$notify({
           type: 'error',
           title: 'Не вдалося вийти з акаунту',
         });
+      } finally {
+        this.$store.dispatch('technicial/stopLoading');
       }
     },
   },
@@ -80,6 +68,18 @@ export default {
     userName() {
       return this.$store.state.auth.user.username;
     },
+    avatarUrl() {
+      return this.$store.state.auth.user.userAvatar;
+    },
+    backgroundImageStyle() {
+      return {
+        backgroundImage: `url(${this.avatarUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '40px',
+        height: '40px' 
+      };
+    }
   }
 };
 </script>
@@ -93,25 +93,68 @@ export default {
   padding: 5px 0;
   color: #fff;
 
-  &__btn {
+  &__info-box {
     display: flex;
+    flex-direction: row;
+    gap: 10px;
     align-items: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: inherit;
-    font-family: inherit;
-    font-size: 16px;
-    padding: 0;
-    transition: color 0.4s;
-
-    &:hover {
-      color: $main-color;
-    }
   }
 
-  &__text {
-    margin-right: 10px;
+  &__info-options {
+    margin-right: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+
+  &__info-options-booking {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background-image: url('@/assets/img/info/booking.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transition: background-image 0.4s;
+  }
+
+  &__info-options-booking:hover {
+    background-image: url('@/assets/img/info/booking_1.png');
+  }
+
+   &__info-options-message {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background-image: url('@/assets/img/info/message.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    transition: background-image 0.4s;
+  }
+
+  &__info-options-message:hover {
+    background-image: url('@/assets/img/info/message_1.png');
+  }
+
+  &__info-count {
+    position: absolute;
+    right: -10px;
+    top: -10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    border-radius: 50%;
+  }
+
+  &__info-count-text {
+    color: $btn-text-color;
+    font-size: 13px;
   }
 
   &__icon {
@@ -119,17 +162,6 @@ export default {
     fill: currentColor;
     width: 16px;
     height: 18px;
-  }
-
-  &__list {
-    position: absolute;
-    right: 180px;
-    top: -30px;
-    list-style-type: none;
-    background: transparent;
-    padding: 5px;
-    color: white;
-    width: 150px;
   }
 
   &__item {
@@ -141,12 +173,20 @@ export default {
   }
 
   &__link {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     text-decoration: none;
     color: inherit;
   }
 
   &__logout {
     padding: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     background: none;
     border: none;
     font-size: inherit;
@@ -154,5 +194,58 @@ export default {
     font-family: inherit;
     cursor: pointer;
   }
+
+  &__icon-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #fff;
+  }
+
+  &__avatar-icon {
+    width: 30px;
+    height: 35px;
+    fill: #fff;
+  }
+
+  &__icon-wrapper-info {
+    display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: 37px;
+      height: 37px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+  }
+  
+  &__info-icon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  &__devider-icon {
+    width: 20px;
+    height: 40px;
+  }
+
+  &__info-icon-text {
+    transition: color 0.4s;
+  }
+
+  &__info-link-text {
+    transition: color 0.4s;
+  }
+}
+
+.account-actions__logout:hover .account-actions__info-icon-text {
+  color: $main-color;
+}
+.account-actions__link:hover .account-actions__info-link-text {
+  color: $main-color;
 }
 </style>

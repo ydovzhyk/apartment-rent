@@ -66,7 +66,7 @@ export default {
 <style lang="scss" scoped>
 .regular-text {
     margin: 0px 0px;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 400;
     line-height: 1.5;
     white-space: pre-wrap;

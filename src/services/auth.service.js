@@ -27,3 +27,7 @@ export const logout = () => {
 export const getCurrentUser = (payload) => {
   return axios.post("/auth/current", payload);
 };
+
+export const editUser = (payload) => {
+  return axios.post("/auth/edit", payload);
+};

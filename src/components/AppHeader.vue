@@ -43,14 +43,16 @@ export default {
     top: 0;
     left: 0;
     width: 100%;
+    height: 50px;
     background: $secondary-color;
-    padding: 16px 0;
+    padding: 10px 0;
     z-index: 100;
 
     &__content {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        height: 50px;
     }
 
     &__link {

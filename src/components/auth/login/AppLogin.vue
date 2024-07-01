@@ -19,7 +19,7 @@
         :rules="passwordRules"
         class="login__input"
       />
-      <ButtonVue class="btn-dark" type="submit" label="Вхід" :loading="loading"></ButtonVue>
+      <ButtonVue class="btn-dark" type="submit" label="Вхід"></ButtonVue>
     </form>
   </AuthContainer>
 </template>
@@ -34,7 +34,6 @@ import {
   passwordValidation,
   isRequired,
 } from '../../../utils/validationRules';
-// import { loginUser } from '@/services/auth.service';
 
 export default {
   name: 'AppLogin',
@@ -69,7 +68,6 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      this.loading = true;
       const isFormValid = Object.values(this.$refs)
         .every(ref => ref.isValid);
       if (isFormValid) {
